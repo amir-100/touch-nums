@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Touch Nums</title>
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+
+  <body onload="onInit()">
+    <div class="container">
+      <div>
+        <form
+          class="radio-group"
+          onchange="onChangeDifficulty(event.target.value)"
+        >
+          <label>
+            <input type="radio" name="difficulty" value="Easy" checked />
+            <span>Easy</span>
+          </label>
+
+          <label>
+            <input type="radio" name="difficulty" value="Medium" />
+            <span>Medium</span>
+          </label>
+
+          <label>
+            <input type="radio" name="difficulty" value="Hard" />
+            <span>Hard</span>
+          </label>
+        </form>
+      </div>
+      <div class="board-wrapper">
+        <div class="next-num"></div>
+        <div class="timer"></div>
+        <table class="board"></table>
+      </div>
+      <div>
+        <button class="reset-btn" onclick="onReset()">New Game</button>
+      </div>
+    </div>
+    <script src="js/main.js"></script>
+  </body>
+</html>
