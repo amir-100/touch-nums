@@ -1,7 +1,9 @@
 let gNextNum = 1;
-let gTimerIntervalId = null;
 let gSelectedDifficulty = "Easy";
-const DIFFICULTY_LEVELS = {
+let gTimerStartTime = null;
+let gIsTimerRunning = false;
+
+const gDifficultyLevels = {
   Easy: 16,
   Medium: 25,
   Hard: 36,
@@ -44,7 +46,7 @@ const resetTimer = () => {
 const printNextNum = () => {
   const elNextNum = document.querySelector(".next-num");
 
-  if (gNextNum > DIFFICULTY_LEVELS[gSelectedDifficulty]) {
+  if (gNextNum > gDifficultyLevels[gSelectedDifficulty]) {
     elNextNum.innerText = "Done!";
     return;
   }
@@ -64,7 +66,7 @@ const shuffleArray = (arr) => {
 };
 
 const createTable = () => {
-  const tableSize = DIFFICULTY_LEVELS[gSelectedDifficulty];
+  const tableSize = gDifficultyLevels[gSelectedDifficulty];
   const tableArray = shuffleArray(createArray(tableSize));
   const sqrtTableSize = Math.sqrt(tableSize);
   let strHtml = "";
@@ -100,27 +102,32 @@ const cellClicked = (clickedNum) => {
   gNextNum++;
   printNextNum();
 
-  if (gNextNum === DIFFICULTY_LEVELS[gSelectedDifficulty] + 1) {
+  if (gNextNum === gDifficultyLevels[gSelectedDifficulty] + 1) {
     stopTimer();
   }
 };
 
-const startTimer = () => {
+function startTimer() {
+  if (gIsTimerRunning) return;
+
+  gIsTimerRunning = true;
+  gTimerStartTime = Date.now();
+  tick();
+}
+
+function tick() {
+  if (!gIsTimerRunning) return;
+
   const elTimer = document.querySelector(".timer");
-  const startTime = Date.now();
+  const elapsedTime = Date.now() - gTimerStartTime;
+  const seconds = Math.floor(elapsedTime / 1000);
+  const milliseconds = elapsedTime % 1000;
 
-  gTimerIntervalId = setInterval(() => {
-    const elapsedTime = Date.now() - startTime;
-    const seconds = Math.floor(elapsedTime / 1000);
-    const milliseconds = elapsedTime % 1000;
+  elTimer.innerText = `${seconds}.${milliseconds.toString().padStart(3, "0")}`;
 
-    elTimer.innerText = `${seconds}.${milliseconds
-      .toString()
-      .padStart(3, "0")}`;
-  }, 100);
-};
+  requestAnimationFrame(tick);
+}
 
 const stopTimer = () => {
-  clearInterval(gTimerIntervalId);
-  gTimerIntervalId = null;
+  gIsTimerRunning = false;
 };
