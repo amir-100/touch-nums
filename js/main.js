@@ -2,12 +2,12 @@ let gNextNum = 1;
 let gSelectedDifficulty = "Easy";
 let gTimerStartTime = null;
 let gIsTimerRunning = false;
-
-const gDifficultyLevels = {
+const DIFFICULTY_LEVELS = {
   Easy: 16,
   Medium: 25,
   Hard: 36,
 };
+let gTableSize = DIFFICULTY_LEVELS[gSelectedDifficulty];
 
 const onInit = () => {
   createTable();
@@ -35,6 +35,7 @@ const onReset = () => {
 
 const onChangeDifficulty = (difficulty) => {
   gSelectedDifficulty = difficulty;
+  gTableSize = DIFFICULTY_LEVELS[gSelectedDifficulty];
   resetGame();
 };
 
@@ -46,7 +47,7 @@ const resetTimer = () => {
 const printNextNum = () => {
   const elNextNum = document.querySelector(".next-num");
 
-  if (gNextNum > gDifficultyLevels[gSelectedDifficulty]) {
+  if (gNextNum > gTableSize) {
     elNextNum.innerText = "Done!";
     return;
   }
@@ -66,9 +67,8 @@ const shuffleArray = (arr) => {
 };
 
 const createTable = () => {
-  const tableSize = gDifficultyLevels[gSelectedDifficulty];
-  const tableArray = shuffleArray(createArray(tableSize));
-  const sqrtTableSize = Math.sqrt(tableSize);
+  const tableArray = shuffleArray(createArray(gTableSize));
+  const sqrtTableSize = Math.sqrt(gTableSize);
   let strHtml = "";
 
   tableArray.forEach((num, idx) => {
@@ -102,7 +102,7 @@ const cellClicked = (clickedNum) => {
   gNextNum++;
   printNextNum();
 
-  if (gNextNum === gDifficultyLevels[gSelectedDifficulty] + 1) {
+  if (gNextNum > gTableSize) {
     stopTimer();
   }
 };
